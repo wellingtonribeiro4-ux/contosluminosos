@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contos Luminosos — Velas Artesanais</title>
+<meta name="description" content="Velas artesanais que unem o cheiro certo à história certa. Cada vela conta um conto.">
+<link rel="icon" href="img/favicon.ico">
+<style>
+  :root{
+    --bg: #f7ecd9;
+    --bg-alt: #f1e3c8;
+    --paper: #fffaf0;
+    --brown-dark: #3b2417;
+    --brown: #6b4226;
+    --brown-soft: #8a5a3b;
+    --gold: #b8862f;
+    --gold-light: #d7a94a;
+    --wine: #6e1f2a;
+    --wine-soft: #8a3040;
+    --cream: #fff8ec;
+    --shadow: 0 10px 30px rgba(59, 36, 23, 0.18);
+    --radius: 18px;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--brown-dark);
+    font-family: 'Georgia', 'Iowan Old Style', 'Palatino Linotype', serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  img{ max-width: 100%; display:block; }
+
+  a{ color: inherit; text-decoration: none; }
+
+  .container{
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* subtle texture */
+  body::before{
+    content:"";
+    position: fixed;
+    inset:0;
+    pointer-events:none;
+    z-index: 0;
+    background-image:
+      radial-gradient(rgba(107,66,38,0.05) 1px, transparent 1px);
+    background-size: 4px 4px;
+    opacity: 0.5;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position: sticky;
+    top:0;
+    z-index: 50;
+    background: rgba(247,236,217,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(107,66,38,0.15);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 14px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .nav-brand{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-weight:700;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+    color: var(--wine);
+  }
+  .nav-brand span{ color: var(--gold); }
+  .nav-cta{
+    background: var(--wine);
+    color: var(--cream);
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    border: 1px solid var(--wine);
+    transition: all .25s ease;
+  }
+  .nav-cta:hover{ background: transparent; color: var(--wine); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    z-index:1;
+    text-align:center;
+    padding: 90px 24px 70px;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(216,169,74,0.25), transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+  }
+  .hero-flame{
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+    display:inline-block;
+    animation: flicker 3s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,100%{ transform: translateY(0) scale(1); opacity:1; }
+    45%{ transform: translateY(-2px) scale(1.05); opacity:0.9; }
+    55%{ transform: translateY(1px) scale(0.97); opacity:1; }
+  }
+  .hero h1{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 8vw, 4rem);
+    color: var(--wine);
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+  }
+  .hero-tagline{
+    font-style: italic;
+    color: var(--brown-soft);
+    font-size: clamp(1.05rem, 3.2vw, 1.4rem);
+    max-width: 560px;
+    margin: 0 auto 8px;
+  }
+  .hero-sub{
+    color: var(--brown);
+    font-size: 0.98rem;
+    max-width: 480px;
+    margin: 0 auto 34px;
+    opacity: 0.85;
+  }
+  .btn-primary{
+    display:inline-block;
+    background: var(--wine);
+    color: var(--cream);
+    padding: 15px 38px;
+    border-radius: 999px;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--wine);
+    transition: transform .25s ease, background .25s ease, color .25s ease;
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--brown-dark);
+  }
+  .hero-divider{
+    margin: 46px auto 0;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* ---------- SOBRE ---------- */
+  .sobre{
+    position: relative; z-index:1;
+    padding: 70px 24px;
+    background: var(--paper);
+    border-top: 1px solid rgba(107,66,38,0.1);
+    border-bottom: 1px solid rgba(107,66,38,0.1);
+  }
+  .sobre-inner{
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .sobre .kicker{
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+  .sobre h2{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--brown-dark);
+    margin-bottom: 20px;
+  }
+  .sobre p{
+    color: var(--brown);
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  /* ---------- COLECAO ---------- */
+  .colecao{
+    position: relative; z-index:1;
+    padding: 70px 24px 90px;
+    background: var(--bg);
+  }
+  .colecao-header{
+    text-align:center;
+    max-width: 620px;
+    margin: 0 auto 46px;
+  }
+  .colecao .kicker{
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+  .colecao h2{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--wine);
+    margin-bottom: 12px;
+  }
+  .colecao-header p{ color: var(--brown-soft); font-size: 0.98rem; }
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 28px;
+  }
+
+  .card{
+    background: var(--cream);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(107,66,38,0.08);
+    display:flex;
+    flex-direction:column;
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 16px 34px rgba(59,36,23,0.24);
+  }
+  .card-img-wrap{
+    position:relative;
+    aspect-ratio: 3 / 4;
+    overflow:hidden;
+    background: var(--bg-alt);
+  }
+  .card-img-wrap img{
+    width:100%; height:100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+  }
+  .card:hover .card-img-wrap img{ transform: scale(1.06); }
+  .card-body{
+    padding: 18px 20px 22px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    text-align:center;
+  }
+  .card-body h3{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.1rem;
+    color: var(--brown-dark);
+    margin-bottom: 4px;
+  }
+  .card-body .fragrance-tag{
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .btn-buy{
+    margin-top: auto;
+    display:inline-block;
+    background: transparent;
+    color: var(--wine);
+    border: 1.5px solid var(--wine);
+    padding: 10px 0;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    letter-spacing: 0.03em;
+    transition: all .25s ease;
+  }
+  .btn-buy:hover{
+    background: var(--wine);
+    color: var(--cream);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    position: relative; z-index:1;
+    background: var(--brown-dark);
+    color: var(--cream);
+    padding: 56px 24px 30px;
+    text-align:center;
+  }
+  footer .footer-brand{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+  }
+  footer .footer-tag{
+    font-style: italic;
+    color: rgba(255,248,236,0.7);
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+  }
+  .footer-links{
+    display:flex;
+    justify-content:center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  .footer-links a{
+    border: 1px solid rgba(255,248,236,0.35);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    transition: all .25s ease;
+  }
+  .footer-links a:hover{
+    background: var(--gold-light);
+    color: var(--brown-dark);
+    border-color: var(--gold-light);
+  }
+  footer .footer-fine{
+    font-size: 0.78rem;
+    color: rgba(255,248,236,0.45);
+  }
+
+  @media (max-width: 480px){
+    .hero{ padding: 70px 20px 54px; }
+    .sobre, .colecao{ padding-left: 18px; padding-right: 18px; }
+    .grid{ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+    .card-body{ padding: 14px 14px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Contos <span>Luminosos</span></div>
+    <a href="#colecao" class="nav-cta">Ver coleção</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-flame">🕯️</div>
+  <h1>Contos Luminosos</h1>
+  <p class="hero-tagline">Cada vela conta uma história.</p>
+  <p class="hero-sub">Velas artesanais inspiradas em livros e filmes, onde o cheiro combina com a atmosfera de cada história.</p>
+  <a href="#colecao" class="btn-primary">Ver coleção</a>
+  <div class="hero-divider"></div>
+</header>
+
+<section class="sobre">
+  <div class="sobre-inner">
+    <div class="kicker">Sobre a Contos Luminosos</div>
+    <h2>Feitas à mão, capítulo a capítulo</h2>
+    <p>Nossas velas são artesanais, feitas à mão com todo cuidado — cada uma inspirada em um livro ou filme que marcou alguma história.</p>
+    <p>Escolhemos cada fragrância para combinar com a atmosfera da narrativa: o mofo doce de uma biblioteca antiga, o verde de um jardim escondido, o calor de uma pista de dança dos anos 80.</p>
+    <p>Acenda, feche os olhos e entre no conto.</p>
+  </div>
+</section>
+
+<section class="colecao" id="colecao">
+  <div class="colecao-header">
+    <div class="kicker">A Coleção</div>
+    <h2>Escolha sua próxima história</h2>
+    <p>Cada vela é um convite para reviver um clássico dos livros ou do cinema.</p>
+  </div>
+
+  <div class="grid" id="candle-grid"></div>
+</section>
+
+<footer>
+  <div class="footer-brand">Contos Luminosos</div>
+  <p class="footer-tag">Velas artesanais, uma história de cada vez.</p>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/contosluminosos" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://contos-luminosos.lojaintegrada.com.br/" target="_blank" rel="noopener">Loja completa</a>
+  </div>
+  <p class="footer-fine">&copy; <span id="year"></span> Contos Luminosos. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+  const STORE_URL = "https://contos-luminosos.lojaintegrada.com.br/";
+
+  const candles = [
+    { file: "alice.jpg",           name: "Alice no País das Maravilhas", note: "chá, menta e flores silvestres" },
+    { file: "anne.jpg",            name: "Anne d'Avonlea",                note: "grama molhada, maçã e lavanda" },
+    { file: "dirty-dancing.jpg",   name: "Dirty Dancing",                 note: "madeira quente e flor de laranjeira" },
+    { file: "guarda-costas.jpg",   name: "O Guarda-Costas",               note: "veludo, âmbar e rosas" },
+    { file: "harry.jpg",           name: "Harry Potter",                  note: "abóbora, canela e livro antigo" },
+    { file: "hocus-pocus.jpg",     name: "Hocus Pocus",                   note: "abóbora especiada e cinzas de vela" },
+    { file: "jardim-secreto.jpg",  name: "O Jardim Secreto",              note: "musgo, chuva e rosas silvestres" },
+    { file: "jurassic-park.jpg",   name: "Jurassic Park",                 note: "folhagem tropical e terra molhada" },
+    { file: "magico-de-oz.jpg",    name: "O Mágico de Oz",                note: "algodão-doce e trilha de tijolos amarelos" },
+    { file: "moby-dick.jpg",       name: "Moby Dick",                     note: "brisa do mar e madeira salgada" },
+    { file: "os-bridgertons.jpg",  name: "Os Bridgertons",                note: "peônias, chá e papel de carta" },
+    { file: "pequeno-principe.jpg",name: "O Pequeno Príncipe",            note: "rosa, poeira de estrelas e areia do deserto" },
+  ];
+
+  const grid = document.getElementById("candle-grid");
+
+  const frag = document.createDocumentFragment();
+  candles.forEach(candle => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <img src="img/${candle.file}" alt="Vela ${candle.name}" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>${candle.name}</h3>
+        <div class="fragrance-tag">${candle.note}</div>
+        <a class="btn-buy" href="${STORE_URL}" target="_blank" rel="noopener">Comprar</a>
+      </div>
+    `;
+    frag.appendChild(card);
+  });
+  grid.appendChild(frag);
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
