@@ -398,16 +398,23 @@
 
   const candles = [
     { file: "alice.jpg",           name: "Alice no País das Maravilhas", note: "chá, menta e flores silvestres" },
-    { file: "anne.jpg",            name: "Anne d'Avonlea",                note: "grama molhada, maçã e lavanda" },
-    { file: "dirty-dancing.jpg",   name: "Dirty Dancing",                 note: "madeira quente e flor de laranjeira" },
-    { file: "guarda-costas.jpg",   name: "O Guarda-Costas",               note: "veludo, âmbar e rosas" },
-    { file: "harry.jpg",           name: "Harry Potter",                  note: "abóbora, canela e livro antigo" },
+    { file: "anne.jpg",            name: "Anne d'Avonlea",                note: "bambu",
+      url: "https://contos-luminosos.lojaintegrada.com.br/anne-with-an-n-vela-aromatica-artesanal-com-aroma-de-bamboo" },
+    { file: "dirty-dancing.jpg",   name: "Dirty Dancing",                 note: "morango com champanhe",
+      url: "https://contos-luminosos.lojaintegrada.com.br/dirty-dancing-vela-artesanal-com-aroma-de-morango-com-champanhe-100g" },
+    { file: "guarda-costas.jpg",   name: "O Guarda-Costas",               note: "chá branco",
+      url: "https://contos-luminosos.lojaintegrada.com.br/o-guarda-costas-vela-artesanal-com-aroma-de-cha-branco-100g" },
+    { file: "harry.jpg",           name: "Harry Potter",                  note: "abóbora, canela e livro antigo",
+      url: "https://contos-luminosos.lojaintegrada.com.br/vela-aromatica-menino-sobreviveu-harry-potter" },
     { file: "hocus-pocus.jpg",     name: "Hocus Pocus",                   note: "abóbora especiada e cinzas de vela" },
-    { file: "jardim-secreto.jpg",  name: "O Jardim Secreto",              note: "musgo, chuva e rosas silvestres" },
+    { file: "jardim-secreto.jpg",  name: "O Jardim Secreto",              note: "cascas e folhas",
+      url: "https://contos-luminosos.lojaintegrada.com.br/o-jardim-secreto-vela-artesanal-com-aroma-de-cascas-e-folhas-100g" },
     { file: "jurassic-park.jpg",   name: "Jurassic Park",                 note: "folhagem tropical e terra molhada" },
     { file: "magico-de-oz.jpg",    name: "O Mágico de Oz",                note: "algodão-doce e trilha de tijolos amarelos" },
-    { file: "moby-dick.jpg",       name: "Moby Dick",                     note: "brisa do mar e madeira salgada" },
-    { file: "os-bridgertons.jpg",  name: "Os Bridgertons",                note: "peônias, chá e papel de carta" },
+    { file: "moby-dick.jpg",       name: "Moby Dick",                     note: "oceano",
+      url: "https://contos-luminosos.lojaintegrada.com.br/moby-dick-vela-aromatica-artesanal-com-arma-de-oceano-100g" },
+    { file: "os-bridgertons.jpg",  name: "Os Bridgertons",                note: "pitaya",
+      url: "https://contos-luminosos.lojaintegrada.com.br/os-bridgertons-vela-aromatica-artesanal-com-aroma-de-pitaya-100g" },
     { file: "pequeno-principe.jpg",name: "O Pequeno Príncipe",            note: "rosa, poeira de estrelas e areia do deserto" },
   ];
 
@@ -424,7 +431,7 @@
       <div class="card-body">
         <h3>${candle.name}</h3>
         <div class="fragrance-tag">${candle.note}</div>
-        <a class="btn-buy" href="${STORE_URL}" target="_blank" rel="noopener">Comprar</a>
+        <a class="btn-buy" href="${candle.url || STORE_URL}" target="_blank" rel="noopener">Comprar</a>
       </div>
     `;
     frag.appendChild(card);
