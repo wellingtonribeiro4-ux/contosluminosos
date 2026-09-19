@@ -620,6 +620,87 @@
     font-size: 1.2rem;
     color: var(--wine);
   }
+  .cart-frete{
+    font-size: 0.92rem;
+    color: var(--brown);
+    text-align: right;
+    margin-bottom: 10px;
+  }
+  .cart-msg{
+    background: rgba(110,31,42,0.08);
+    border: 1px solid rgba(110,31,42,0.25);
+    color: var(--wine);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+  }
+  .cart-pagar:disabled{ opacity: 0.6; cursor: wait; transform: none; }
+  #cart-checkout[hidden], .cart-pagar[hidden]{ display: none; }
+
+  .cart-entrega{
+    border-top: 1px solid rgba(107,66,38,0.1);
+    padding-top: 18px;
+    margin-bottom: 18px;
+  }
+  .cart-entrega h4{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 0.98rem;
+    color: var(--brown-dark);
+    margin-bottom: 12px;
+  }
+  .entrega-grid{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px 12px;
+  }
+  .campo{
+    grid-column: span 3;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--brown);
+  }
+  .campo-full{ grid-column: 1 / -1; }
+  .campo-rua{ grid-column: span 4; }
+  .campo-curto{ grid-column: span 2; }
+  .campo-cidade{ grid-column: span 3; }
+  .campo-uf{ grid-column: span 1; }
+  .campo input{
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--brown-dark);
+    background: var(--paper);
+    border: 1px solid rgba(107,66,38,0.25);
+    border-radius: 10px;
+    padding: 9px 12px;
+    width: 100%;
+  }
+  .campo input:focus{
+    outline: 2px solid var(--gold-light);
+    outline-offset: 1px;
+    border-color: var(--gold);
+  }
+
+  .pagamento-aviso{
+    max-width: 720px;
+    margin: 0 auto 26px;
+    background: var(--cream);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 24px;
+    text-align: center;
+    color: var(--brown-dark);
+  }
+  .pagamento-aviso strong{
+    display: block;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.1rem;
+    color: var(--wine);
+    margin-bottom: 4px;
+  }
 
   /* ---------- FOOTER ---------- */
   footer{
@@ -678,6 +759,8 @@
     .nav-link{ font-size: 0.78rem; }
     .monte-builder{ padding: 26px 18px; }
     .monte-summary{ flex-direction: column; align-items: stretch; }
+    .monte-cart{ padding: 24px 18px; }
+    .campo, .campo-rua, .campo-curto, .campo-cidade, .campo-uf{ grid-column: 1 / -1; }
     .monte-price-row{ justify-content: space-between; }
     .lightbox-prev, .lightbox-next{ width: 40px; height:40px; font-size:1.3rem; }
     .lightbox-prev{ left:6px; } .lightbox-next{ right:6px; }
@@ -742,6 +825,8 @@
 </div>
 
 <section class="monte" id="monte-sua-vela">
+  <div class="pagamento-aviso" id="pagamento-aviso" role="status" hidden></div>
+
   <div class="monte-header">
     <div class="kicker">Personalize</div>
     <h2>Monte sua vela</h2>
@@ -789,9 +874,50 @@
   <div class="monte-cart" id="monte-cart" hidden>
     <h3>Seu carrinho</h3>
     <ul class="cart-list" id="cart-list"></ul>
+
+    <form class="cart-entrega" id="cart-entrega" hidden>
+      <h4>Dados para entrega</h4>
+      <div class="entrega-grid">
+        <label class="campo campo-full">Nome completo
+          <input name="nome" autocomplete="name" required minlength="3" maxlength="100">
+        </label>
+        <label class="campo">E-mail
+          <input name="email" type="email" autocomplete="email" required maxlength="120">
+        </label>
+        <label class="campo">WhatsApp / telefone (com DDD)
+          <input name="telefone" type="tel" autocomplete="tel" inputmode="tel" required minlength="10" maxlength="20">
+        </label>
+        <label class="campo campo-curto">CEP
+          <input name="cep" autocomplete="postal-code" inputmode="numeric" required pattern="[0-9]{5}-?[0-9]{3}" maxlength="9">
+        </label>
+        <label class="campo campo-rua">Rua
+          <input name="rua" autocomplete="address-line1" required maxlength="120">
+        </label>
+        <label class="campo campo-curto">Número
+          <input name="numero" required maxlength="10">
+        </label>
+        <label class="campo campo-rua">Complemento (opcional)
+          <input name="complemento" autocomplete="address-line2" maxlength="60">
+        </label>
+        <label class="campo campo-curto">Bairro
+          <input name="bairro" required maxlength="80">
+        </label>
+        <label class="campo campo-cidade">Cidade
+          <input name="cidade" autocomplete="address-level2" required maxlength="80">
+        </label>
+        <label class="campo campo-uf">UF
+          <input name="uf" autocomplete="address-level1" required pattern="[A-Za-z]{2}" maxlength="2">
+        </label>
+      </div>
+    </form>
+
+    <p class="cart-frete" id="cart-frete" hidden>Frete (taxa fixa): R$ <span id="cart-frete-valor">0,00</span></p>
+    <p class="cart-msg" id="cart-msg" role="alert" hidden></p>
+
     <div class="cart-footer">
       <div class="cart-total">Total: R$ <span id="cart-total">0,00</span></div>
       <a href="https://contos-luminosos.lojaintegrada.com.br/" target="_blank" rel="noopener" class="btn-primary" id="cart-checkout">Finalizar compra</a>
+      <button type="button" class="btn-primary cart-pagar" id="cart-pagar" hidden>Ir para o pagamento</button>
     </div>
   </div>
 </section>
@@ -817,6 +943,15 @@
   if(window.emailjs){
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
   }
+
+  // ---------- CONFIGURAÇÃO DO PAGAMENTO (Mercado Pago, via servidor próprio) ----------
+  // URL do servidor de pagamento (Cloudflare Worker), sem barra no final.
+  // Vazio = pagamento no site desligado: "Finalizar compra" continua levando à Loja Integrada.
+  const PAGAMENTO_API_URL = "";
+  // Taxa fixa de frete em R$. Precisa ser igual ao FRETE do servidor (o servidor é quem cobra;
+  // se os valores divergirem, o site avisa em vez de cobrar diferente do que foi mostrado).
+  const FRETE = 15.00;
+  const PAGAMENTO_ATIVO = PAGAMENTO_API_URL !== "";
 
   // ---------- COLEÇÕES (capa + galeria completa, por pasta) ----------
   const colecoes = [
@@ -1187,9 +1322,14 @@
       `;
       cartList.appendChild(li);
     });
-    const total = cart.reduce((soma, item) => soma + item.preco, 0);
-    cartTotalEl.textContent = total.toFixed(2).replace(".", ",");
+    cartTotalEl.textContent = totalDoCarrinho().toFixed(2).replace(".", ",");
     cartEl.hidden = cart.length === 0;
+  }
+
+  // Soma das velas (+ frete quando o pagamento no site está ligado).
+  function totalDoCarrinho(){
+    const velas = cart.reduce((soma, item) => soma + item.preco, 0);
+    return PAGAMENTO_ATIVO ? velas + FRETE : velas;
   }
 
   addBtn.addEventListener("click", () => {
@@ -1223,33 +1363,161 @@
   });
 
   // ---------- FINALIZAR COMPRA (avisa a loja por e-mail) ----------
-  function montarResumoPedido(){
+  const brl = (valor) => valor.toFixed(2).replace(".", ",");
+
+  // `extra` só existe no pagamento pelo site: { pedido, entrega }
+  function montarResumoPedido(extra){
     const linhas = cart.map((item, i) =>
-      `${i + 1}. ${item.cheiro} · rótulo ${item.rotulo.nome} · ${item.tamanho}g · ${ACABAMENTO_LABEL[item.acabamento]} — R$ ${item.preco.toFixed(2).replace(".", ",")}`
+      `${i + 1}. ${item.cheiro} · rótulo ${item.rotulo.nome} · ${item.tamanho}g · ${ACABAMENTO_LABEL[item.acabamento]} — R$ ${brl(item.preco)}`
     );
-    const total = cart.reduce((soma, item) => soma + item.preco, 0);
+
+    if(!extra){
+      const total = cart.reduce((soma, item) => soma + item.preco, 0);
+      return ["Novo pedido — Contos Luminosos", ...linhas, `Total: R$ ${brl(total)}`].join("\n");
+    }
+
+    const e = extra.entrega;
     return [
-      "Novo pedido — Contos Luminosos",
+      "Pedido iniciado (aguardando pagamento) — Contos Luminosos",
+      `Nº do pedido: ${extra.pedido} (confira o pagamento no Mercado Pago)`,
       ...linhas,
-      `Total: R$ ${total.toFixed(2).replace(".", ",")}`,
+      `Frete: R$ ${brl(FRETE)}`,
+      `Total: R$ ${brl(totalDoCarrinho())}`,
+      "",
+      "Entrega:",
+      `${e.nome} · ${e.email} · ${e.telefone}`,
+      `${e.rua}, ${e.numero}${e.complemento ? " - " + e.complemento : ""} · ${e.bairro}`,
+      `${e.cidade}/${e.uf.toUpperCase()} · CEP ${e.cep}`,
     ].join("\n");
   }
 
+  // E-mail: enviado automaticamente via EmailJS, sem precisar de servidor.
+  // Devolve uma promessa que nunca rejeita (o e-mail não pode travar a compra).
+  function enviarEmailPedido(resumo){
+    if(!window.emailjs) return Promise.resolve();
+    return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: EMAIL_DESTINO,
+      pedido: resumo,
+    }).catch(err => console.error("Falha ao enviar e-mail do pedido:", err));
+  }
+
+  // --- sem pagamento no site: segue para a Loja Integrada, como antes ---
   const cartCheckout = document.getElementById("cart-checkout");
   cartCheckout.addEventListener("click", () => {
     if(cart.length === 0) return;
-    const resumo = montarResumoPedido();
-
-    // E-mail: enviado automaticamente via EmailJS, sem precisar de servidor.
-    if(window.emailjs){
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email: EMAIL_DESTINO,
-        pedido: resumo,
-      }).catch(err => console.error("Falha ao enviar e-mail do pedido:", err));
-    }
-
+    enviarEmailPedido(montarResumoPedido());
     // a navegação para a loja segue normalmente pelo href do próprio link
   });
+
+  // --- com pagamento no site: gera o link de pagamento no servidor e redireciona ---
+  const cartPagar = document.getElementById("cart-pagar");
+  const cartForm = document.getElementById("cart-entrega");
+  const cartMsg = document.getElementById("cart-msg");
+
+  function mostrarMsg(texto){
+    cartMsg.textContent = texto;
+    cartMsg.hidden = !texto;
+  }
+
+  function erroAmigavel(mensagem){
+    const err = new Error(mensagem);
+    err.amigavel = true;
+    return err;
+  }
+
+  function lerEntrega(){
+    const dados = new FormData(cartForm);
+    const campo = (nome) => String(dados.get(nome) || "").trim();
+    return {
+      nome: campo("nome"), email: campo("email"), telefone: campo("telefone"),
+      cep: campo("cep"), rua: campo("rua"), numero: campo("numero"),
+      complemento: campo("complemento"), bairro: campo("bairro"),
+      cidade: campo("cidade"), uf: campo("uf"),
+    };
+  }
+
+  if(PAGAMENTO_ATIVO){
+    cartCheckout.hidden = true;
+    cartPagar.hidden = false;
+    cartForm.hidden = false;
+    document.getElementById("cart-frete").hidden = false;
+    document.getElementById("cart-frete-valor").textContent = brl(FRETE);
+
+    cartPagar.addEventListener("click", async () => {
+      if(cart.length === 0 || cartPagar.disabled) return;
+      if(!cartForm.checkValidity()){
+        cartForm.reportValidity();
+        return;
+      }
+
+      const rotuloBotao = cartPagar.textContent;
+      cartPagar.disabled = true;
+      cartPagar.textContent = "Aguarde…";
+      mostrarMsg("");
+
+      try {
+        const entrega = lerEntrega();
+        const resp = await fetch(`${PAGAMENTO_API_URL}/criar-pagamento`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            itens: cart.map(item => ({
+              cheiro: item.cheiro,
+              rotulo: item.rotulo.nome,
+              tamanho: item.tamanho,
+              acabamento: item.acabamento,
+            })),
+            cliente: entrega,
+          }),
+        });
+        const dados = await resp.json().catch(() => ({}));
+        if(!resp.ok) throw erroAmigavel(dados.erro || "Não foi possível gerar o pagamento. Tente de novo.");
+
+        // O servidor é quem define o valor cobrado: se divergir do que o cliente viu, não segue.
+        if(Math.abs(dados.total - totalDoCarrinho()) > 0.005){
+          throw erroAmigavel("Os preços foram atualizados. Recarregue a página e monte o pedido de novo.");
+        }
+        if(new URL(dados.url).protocol !== "https:") throw new Error("URL de pagamento inválida");
+
+        // avisa a loja (sem travar o cliente por mais de ~2,5s) e segue para o pagamento
+        await Promise.race([
+          enviarEmailPedido(montarResumoPedido({ pedido: dados.pedido, entrega })),
+          new Promise(resolve => setTimeout(resolve, 2500)),
+        ]);
+        window.location.href = dados.url;
+      } catch(err){
+        console.error("Falha ao iniciar o pagamento:", err);
+        mostrarMsg(err.amigavel ? err.message : "Não foi possível conectar ao pagamento. Tente de novo em instantes.");
+        cartPagar.disabled = false;
+        cartPagar.textContent = rotuloBotao;
+      }
+    });
+  }
+
+  // ---------- RETORNO DO PAGAMENTO (?pagamento=sucesso|pendente|falha) ----------
+  (function mostrarRetornoPagamento(){
+    const params = new URLSearchParams(window.location.search);
+    const estado = params.get("pagamento");
+    const mensagens = {
+      sucesso:  ["Pagamento aprovado!", "Obrigada pela compra. Seu pedido está sendo preparado com carinho."],
+      pendente: ["Pagamento pendente", "Assim que o Mercado Pago confirmar o pagamento, seguimos com o seu pedido."],
+      falha:    ["Pagamento não concluído", "Nada foi cobrado. Você pode montar o pedido e tentar de novo quando quiser."],
+    };
+    if(!mensagens[estado]) return;
+
+    const pedido = params.get("pedido") || "";
+    const aviso = document.getElementById("pagamento-aviso");
+    const titulo = document.createElement("strong");
+    titulo.textContent = mensagens[estado][0];
+    const corpo = document.createElement("span");
+    corpo.textContent = mensagens[estado][1] + (/^CL-[A-Z0-9]{1,20}$/.test(pedido) ? ` Pedido nº ${pedido}.` : "");
+    aviso.append(titulo, corpo);
+    aviso.hidden = false;
+    aviso.scrollIntoView({ block: "center" });
+
+    // limpa os parâmetros da URL para o aviso não reaparecer ao recarregar
+    history.replaceState(null, "", window.location.pathname + window.location.hash);
+  })();
 </script>
 
 </body>
