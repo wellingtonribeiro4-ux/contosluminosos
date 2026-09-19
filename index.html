@@ -947,7 +947,9 @@
   // ---------- CONFIGURAÇÃO DO PAGAMENTO (Mercado Pago, via servidor próprio) ----------
   // URL do servidor de pagamento (Cloudflare Worker), sem barra no final.
   // Vazio = pagamento no site desligado: "Finalizar compra" continua levando à Loja Integrada.
-  const PAGAMENTO_API_URL = "";
+  // ATENÇÃO: enquanto o servidor usar o token de TESTE do Mercado Pago, nenhuma compra real é cobrada.
+  // Para vender de verdade, troque o segredo MP_ACCESS_TOKEN do servidor pelo token de PRODUÇÃO.
+  const PAGAMENTO_API_URL = "https://contos-luminosos-pagamento.contos-luminosos-pagamento.workers.dev";
   // Taxa fixa de frete em R$. Precisa ser igual ao FRETE do servidor (o servidor é quem cobra;
   // se os valores divergirem, o site avisa em vez de cobrar diferente do que foi mostrado).
   const FRETE = 15.00;
