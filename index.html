@@ -95,6 +95,17 @@
     transition: all .25s ease;
   }
   .nav-cta:hover{ background: transparent; color: var(--wine); }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap: 20px;
+  }
+  .nav-link{
+    font-size: 0.85rem;
+    color: var(--brown);
+    transition: color .2s ease;
+  }
+  .nav-link:hover{ color: var(--wine); }
 
   /* ---------- HERO ---------- */
   .hero{
@@ -146,9 +157,11 @@
     padding: 15px 38px;
     border-radius: 999px;
     font-size: 1rem;
+    font-family: inherit;
     letter-spacing: 0.03em;
     box-shadow: var(--shadow);
     border: 1px solid var(--wine);
+    cursor: pointer;
     transition: transform .25s ease, background .25s ease, color .25s ease;
   }
   .btn-primary:hover{
@@ -224,73 +237,388 @@
   }
   .colecao-header p{ color: var(--brown-soft); font-size: 0.98rem; }
 
-  .grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 28px;
+  /* ---------- CARDS DE COLECAO (nivel 1) ---------- */
+  .colecoes-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .colecao-card{
+    position:relative;
+    display:block;
+    width:100%;
+    aspect-ratio: 4 / 5;
+    border:none;
+    padding:0;
+    cursor:pointer;
+    border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: var(--shadow);
+    background: var(--brown-dark);
+    font-family: inherit;
+  }
+  .colecao-card img{
+    width:100%; height:100%;
+    object-fit:cover;
+    transition: transform .4s ease;
+  }
+  .colecao-card:hover img{ transform: scale(1.06); }
+  .colecao-card-overlay{
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(59,36,23,0) 42%, rgba(59,36,23,0.88) 100%);
+  }
+  .colecao-card-info{
+    position:absolute; left:0; right:0; bottom:0;
+    padding: 20px;
+    text-align:left;
+  }
+  .colecao-card-nome{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.25rem;
+    color: var(--cream);
+  }
+  .colecao-card-tagline{
+    font-style: italic;
+    font-size: 0.82rem;
+    color: rgba(255,248,236,0.8);
+    margin-top: 2px;
+  }
+  .colecao-card-cta{
+    display:inline-block;
+    margin-top: 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-light);
   }
 
-  .card{
-    background: var(--cream);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(107,66,38,0.08);
+  /* ---------- MODAL DA COLECAO (nivel 2: galeria completa) ---------- */
+  .colecao-modal{
+    position: fixed; inset:0; z-index: 200;
+    background: rgba(30,18,11,0.82);
     display:flex;
-    flex-direction:column;
-    transition: transform .3s ease, box-shadow .3s ease;
+    align-items:flex-start;
+    justify-content:center;
+    padding: 48px 16px;
+    overflow-y: auto;
   }
-  .card:hover{
-    transform: translateY(-6px);
-    box-shadow: 0 16px 34px rgba(59,36,23,0.24);
-  }
-  .card-img-wrap{
+  .colecao-modal[hidden]{ display:none; }
+  .colecao-modal-panel{
     position:relative;
-    aspect-ratio: 3 / 4;
-    overflow:hidden;
-    background: var(--bg-alt);
+    width:100%;
+    max-width: 980px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: 34px 28px 42px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
   }
-  .card-img-wrap img{
-    width:100%; height:100%;
-    object-fit: cover;
-    transition: transform .5s ease;
-  }
-  .card:hover .card-img-wrap img{ transform: scale(1.06); }
-  .card-body{
-    padding: 18px 20px 22px;
-    display:flex;
-    flex-direction:column;
-    flex:1;
-    text-align:center;
-  }
-  .card-body h3{
-    font-family: 'Playfair Display', 'Georgia', serif;
-    font-size: 1.1rem;
+  .colecao-modal-close{
+    position:absolute; top:16px; right:16px;
+    width: 38px; height:38px;
+    border-radius:50%;
+    border: 1px solid rgba(107,66,38,0.3);
+    background: var(--cream);
     color: var(--brown-dark);
+    font-size: 1.3rem;
+    line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: all .2s ease;
+  }
+  .colecao-modal-close:hover{ background: var(--wine); color: var(--cream); border-color: var(--wine); }
+  .colecao-modal-title{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.6rem;
+    color: var(--wine);
+    padding-right: 40px;
     margin-bottom: 4px;
   }
-  .card-body .fragrance-tag{
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
+  .colecao-modal-tagline{
+    font-style: italic;
+    color: var(--brown-soft);
+    margin-bottom: 24px;
+  }
+  .colecao-modal-tagline[hidden]{ display:none; }
+
+  .galeria{
+    columns: 3 220px;
+    column-gap: 16px;
+  }
+  .galeria img{
+    width:100%;
+    display:block;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    break-inside: avoid;
+    cursor: zoom-in;
+    transition: transform .3s ease;
+  }
+  .galeria img:hover{ transform: scale(1.02); }
+
+  /* ---------- LIGHTBOX (nivel 3: foto ampliada) ---------- */
+  .lightbox{
+    position: fixed; inset:0; z-index: 300;
+    background: rgba(10,6,3,0.92);
+    display:flex; align-items:center; justify-content:center;
+    padding: 30px;
+  }
+  .lightbox[hidden]{ display:none; }
+  .lightbox img{
+    max-width: 100%;
+    max-height: 88vh;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  .lightbox-close, .lightbox-prev, .lightbox-next{
+    position: fixed;
+    background: rgba(255,248,236,0.12);
+    border: 1px solid rgba(255,248,236,0.35);
+    color: var(--cream);
+    cursor: pointer;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .2s ease;
+  }
+  .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover{ background: rgba(255,248,236,0.28); }
+  .lightbox-close{ top:20px; right:20px; width:42px; height:42px; font-size:1.4rem; }
+  .lightbox-prev, .lightbox-next{ top:50%; transform: translateY(-50%); width:48px; height:48px; font-size:1.6rem; }
+  .lightbox-prev{ left:16px; }
+  .lightbox-next{ right:16px; }
+
+  body.no-scroll{ overflow: hidden; }
+
+  /* ---------- MONTE SUA VELA ---------- */
+  .monte{
+    position: relative; z-index:1;
+    padding: 70px 24px 90px;
+    background: var(--paper);
+    border-top: 1px solid rgba(107,66,38,0.1);
+    border-bottom: 1px solid rgba(107,66,38,0.1);
+  }
+  .monte-header{
+    text-align:center;
+    max-width: 620px;
+    margin: 0 auto 46px;
+  }
+  .monte .kicker{
     text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
     color: var(--gold);
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+  .monte h2{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--wine);
+    margin-bottom: 12px;
+  }
+  .monte-header p{ color: var(--brown-soft); font-size: 0.98rem; }
+
+  .monte-builder{
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--cream);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(107,66,38,0.08);
+    padding: 36px 34px;
+  }
+  .monte-step + .monte-step{ margin-top: 30px; }
+  .monte-step h3{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.05rem;
+    color: var(--brown-dark);
+    margin-bottom: 14px;
+  }
+  .monte-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px;
+  }
+  .monte-option{
+    font-family: inherit;
+    font-size: 0.88rem;
+    background: transparent;
+    color: var(--brown);
+    border: 1.5px solid rgba(107,66,38,0.3);
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .monte-option:hover{ border-color: var(--wine); color: var(--wine); }
+  .monte-option[aria-pressed="true"]{
+    background: var(--wine);
+    border-color: var(--wine);
+    color: var(--cream);
+  }
+
+  .rotulo-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px;
     margin-bottom: 16px;
   }
-  .btn-buy{
-    margin-top: auto;
-    display:inline-block;
+  .rotulo-tab{
+    font-family: inherit;
+    font-size: 0.82rem;
     background: transparent;
-    color: var(--wine);
-    border: 1.5px solid var(--wine);
-    padding: 10px 0;
+    color: var(--brown);
+    border: 1.5px solid rgba(107,66,38,0.3);
+    padding: 7px 16px;
     border-radius: 999px;
-    font-size: 0.9rem;
-    letter-spacing: 0.03em;
-    transition: all .25s ease;
+    cursor: pointer;
+    transition: all .2s ease;
   }
-  .btn-buy:hover{
-    background: var(--wine);
+  .rotulo-tab:hover{ border-color: var(--wine); color: var(--wine); }
+  .rotulo-tab[aria-selected="true"]{
+    background: var(--brown);
+    border-color: var(--brown);
     color: var(--cream);
+  }
+  .rotulo-grupo[hidden]{ display:none; }
+  .rotulo-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    gap: 10px;
+  }
+  .rotulo-opcao{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 6px;
+    font-family: inherit;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 5px;
+    cursor: pointer;
+    transition: border-color .2s ease;
+  }
+  .rotulo-opcao:hover{ border-color: rgba(184,134,47,0.5); }
+  .rotulo-opcao[aria-pressed="true"]{ border-color: var(--wine); }
+  .rotulo-opcao img{
+    width:100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+  }
+  .rotulo-opcao span{
+    font-size: 0.72rem;
+    color: var(--brown);
+    text-align:center;
+    line-height: 1.2;
+  }
+  .rotulo-opcao[aria-pressed="true"] span{ color: var(--wine); font-weight:bold; }
+  .rotulo-empty{
+    color: var(--brown-soft);
+    font-size: 0.85rem;
+    font-style: italic;
+    padding: 6px 0 2px;
+  }
+
+  .monte-summary{
+    margin-top: 34px;
+    padding-top: 26px;
+    border-top: 1px dashed rgba(107,66,38,0.25);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .monte-resumo{
+    font-size: 0.85rem;
+    color: var(--brown-soft);
+    flex: 1;
+    min-width: 200px;
+  }
+  .monte-price-row{
+    display:flex;
+    align-items:center;
+    gap: 20px;
+  }
+  .monte-total{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.5rem;
+    color: var(--wine);
+    white-space: nowrap;
+  }
+  .monte-total span{
+    display:block;
+    font-family: 'Georgia', serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brown-soft);
+    margin-bottom: 2px;
+  }
+  .monte-add[aria-disabled="true"]{
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .monte-cart{
+    max-width: 720px;
+    margin: 26px auto 0;
+    background: var(--cream);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(107,66,38,0.08);
+    padding: 30px 34px;
+  }
+  .monte-cart h3{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.05rem;
+    color: var(--brown-dark);
+    margin-bottom: 16px;
+  }
+  .cart-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .cart-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(107,66,38,0.1);
+    font-size: 0.92rem;
+    color: var(--brown);
+  }
+  .cart-item-desc{ flex:1; }
+  .cart-item-price{ color: var(--brown-dark); font-weight:bold; white-space:nowrap; }
+  .cart-remove{
+    background:none;
+    border:none;
+    color: var(--wine);
+    font-size: 1.3rem;
+    line-height:1;
+    cursor:pointer;
+    padding: 0 2px 0 10px;
+  }
+  .cart-remove:hover{ color: var(--wine-soft); }
+  .cart-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .cart-total{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.2rem;
+    color: var(--wine);
   }
 
   /* ---------- FOOTER ---------- */
@@ -339,9 +667,20 @@
 
   @media (max-width: 480px){
     .hero{ padding: 70px 20px 54px; }
-    .sobre, .colecao{ padding-left: 18px; padding-right: 18px; }
-    .grid{ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
-    .card-body{ padding: 14px 14px 18px; }
+    .sobre, .colecao, .monte{ padding-left: 18px; padding-right: 18px; }
+    .colecoes-grid{ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+    .rotulo-grid{ grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+    .galeria{ columns: 2 140px; column-gap: 10px; }
+    .galeria img{ margin-bottom: 10px; border-radius: 12px; }
+    .colecao-modal{ padding: 24px 10px; }
+    .colecao-modal-panel{ padding: 26px 16px 30px; }
+    .nav-links{ gap: 12px; }
+    .nav-link{ font-size: 0.78rem; }
+    .monte-builder{ padding: 26px 18px; }
+    .monte-summary{ flex-direction: column; align-items: stretch; }
+    .monte-price-row{ justify-content: space-between; }
+    .lightbox-prev, .lightbox-next{ width: 40px; height:40px; font-size:1.3rem; }
+    .lightbox-prev{ left:6px; } .lightbox-next{ right:6px; }
   }
 </style>
 </head>
@@ -350,7 +689,10 @@
 <nav class="nav">
   <div class="nav-inner">
     <div class="nav-brand">Contos <span>Luminosos</span></div>
-    <a href="#colecao" class="nav-cta">Ver coleção</a>
+    <div class="nav-links">
+      <a href="#monte-sua-vela" class="nav-link">Monte a sua</a>
+      <a href="#colecao" class="nav-cta">Ver coleção</a>
+    </div>
   </div>
 </nav>
 
@@ -358,7 +700,7 @@
   <div class="hero-flame">🕯️</div>
   <h1>Contos Luminosos</h1>
   <p class="hero-tagline">Cada vela conta uma história.</p>
-  <p class="hero-sub">Velas artesanais inspiradas em livros e filmes, onde o cheiro combina com a atmosfera de cada história.</p>
+  <p class="hero-sub">Velas artesanais que você personaliza: escolha a estampa, o cheiro, o tamanho e o acabamento.</p>
   <a href="#colecao" class="btn-primary">Ver coleção</a>
   <div class="hero-divider"></div>
 </header>
@@ -367,8 +709,8 @@
   <div class="sobre-inner">
     <div class="kicker">Sobre a Contos Luminosos</div>
     <h2>Feitas à mão, capítulo a capítulo</h2>
-    <p>Nossas velas são artesanais, feitas à mão com todo cuidado — cada uma inspirada em um livro ou filme que marcou alguma história.</p>
-    <p>Escolhemos cada fragrância para combinar com a atmosfera da narrativa: o mofo doce de uma biblioteca antiga, o verde de um jardim escondido, o calor de uma pista de dança dos anos 80.</p>
+    <p>Nossas velas são artesanais, feitas à mão com todo cuidado — com estampas inspiradas em livros, filmes e outros temas queridos.</p>
+    <p>Você escolhe a estampa que combina com você, o cheiro que mais te agrada, o tamanho e o acabamento — cada vela sai do jeito que você montou.</p>
     <p>Acenda, feche os olhos e entre no conto.</p>
   </div>
 </section>
@@ -376,11 +718,82 @@
 <section class="colecao" id="colecao">
   <div class="colecao-header">
     <div class="kicker">A Coleção</div>
-    <h2>Escolha sua próxima história</h2>
-    <p>Cada vela é um convite para reviver um clássico dos livros ou do cinema.</p>
+    <h2>Estampas para sua vela</h2>
+    <p>Navegue pelas coleções e se inspire — depois é só montar sua vela com o cheiro, tamanho e acabamento que combinam.</p>
   </div>
 
-  <div class="grid" id="candle-grid"></div>
+  <div class="colecoes-grid" id="colecoes-grid"></div>
+</section>
+
+<div class="colecao-modal" id="colecao-modal" hidden>
+  <div class="colecao-modal-panel">
+    <button type="button" class="colecao-modal-close" id="colecao-modal-close" aria-label="Fechar coleção">&times;</button>
+    <div class="colecao-modal-title" id="colecao-modal-title"></div>
+    <div class="colecao-modal-tagline" id="colecao-modal-tagline"></div>
+    <div class="galeria" id="colecao-modal-galeria"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Fechar imagem">&times;</button>
+  <button type="button" class="lightbox-prev" id="lightbox-prev" aria-label="Imagem anterior">&#8249;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button type="button" class="lightbox-next" id="lightbox-next" aria-label="Próxima imagem">&#8250;</button>
+</div>
+
+<section class="monte" id="monte-sua-vela">
+  <div class="monte-header">
+    <div class="kicker">Personalize</div>
+    <h2>Monte sua vela</h2>
+    <p>Escolha o cheiro, o rótulo, o tamanho e o acabamento — o valor atualiza sozinho conforme você escolhe.</p>
+  </div>
+
+  <div class="monte-builder">
+    <div class="monte-step">
+      <h3>1. Escolha o cheiro</h3>
+      <div class="monte-options" id="monte-cheiro" role="group" aria-label="Cheiro"></div>
+    </div>
+
+    <div class="monte-step">
+      <h3>2. Escolha o rótulo</h3>
+      <div class="rotulo-tabs" id="rotulo-tabs" role="tablist" aria-label="Coleção do rótulo"></div>
+      <div id="rotulo-grupos"></div>
+    </div>
+
+    <div class="monte-step">
+      <h3>3. Escolha o tamanho</h3>
+      <div class="monte-options" role="group" aria-label="Tamanho">
+        <button type="button" class="monte-option" data-group="tamanho" data-value="100" aria-pressed="false">100g</button>
+        <button type="button" class="monte-option" data-group="tamanho" data-value="150" aria-pressed="false">150g</button>
+      </div>
+    </div>
+
+    <div class="monte-step">
+      <h3>4. Escolha o acabamento</h3>
+      <div class="monte-options" role="group" aria-label="Acabamento">
+        <button type="button" class="monte-option" data-group="acabamento" data-value="nenhum" aria-pressed="false">Sem suporte (só a vela)</button>
+        <button type="button" class="monte-option" data-group="acabamento" data-value="madeira" aria-pressed="false">Base redonda de madeira</button>
+        <button type="button" class="monte-option" data-group="acabamento" data-value="castical" aria-pressed="false">Castiçal</button>
+      </div>
+    </div>
+
+    <div class="monte-summary">
+      <div class="monte-resumo" id="monte-resumo">Escolha as opções acima para ver sua vela.</div>
+      <div class="monte-price-row">
+        <div class="monte-total"><span>Total</span>R$ <span id="monte-preco">--</span></div>
+        <button type="button" class="btn-primary monte-add" id="monte-add" aria-disabled="true">Adicionar ao carrinho</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="monte-cart" id="monte-cart" hidden>
+    <h3>Seu carrinho</h3>
+    <ul class="cart-list" id="cart-list"></ul>
+    <div class="cart-footer">
+      <div class="cart-total">Total: R$ <span id="cart-total">0,00</span></div>
+      <a href="https://contos-luminosos.lojaintegrada.com.br/" target="_blank" rel="noopener" class="btn-primary" id="cart-checkout">Finalizar compra</a>
+    </div>
+  </div>
 </section>
 
 <footer>
@@ -393,52 +806,450 @@
   <p class="footer-fine">&copy; <span id="year"></span> Contos Luminosos. Todos os direitos reservados.</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  const STORE_URL = "https://contos-luminosos.lojaintegrada.com.br/";
+  // ---------- CONFIGURAÇÃO DO PEDIDO (e-mail) ----------
+  const EMAILJS_PUBLIC_KEY  = "apTZ5sfaFis1Knhql"; // emailjs.com → Account → General
+  const EMAILJS_SERVICE_ID  = "service_794h7wb"; // emailjs.com → Email Services
+  const EMAILJS_TEMPLATE_ID = "template_mhp4xdl"; // emailjs.com → Email Templates
+  const EMAIL_DESTINO = "wellington.ribeiro4@gmail.com,thathaaer@yahoo.com.br"; // para onde o pedido deve chegar
 
-  const candles = [
-    { file: "alice.jpg",           name: "Alice no País das Maravilhas", note: "chá, menta e flores silvestres" },
-    { file: "anne.jpg",            name: "Anne d'Avonlea",                note: "bambu",
-      url: "https://contos-luminosos.lojaintegrada.com.br/anne-with-an-n-vela-aromatica-artesanal-com-aroma-de-bamboo" },
-    { file: "dirty-dancing.jpg",   name: "Dirty Dancing",                 note: "morango com champanhe",
-      url: "https://contos-luminosos.lojaintegrada.com.br/dirty-dancing-vela-artesanal-com-aroma-de-morango-com-champanhe-100g" },
-    { file: "guarda-costas.jpg",   name: "O Guarda-Costas",               note: "chá branco",
-      url: "https://contos-luminosos.lojaintegrada.com.br/o-guarda-costas-vela-artesanal-com-aroma-de-cha-branco-100g" },
-    { file: "harry.jpg",           name: "Harry Potter",                  note: "abóbora, canela e livro antigo",
-      url: "https://contos-luminosos.lojaintegrada.com.br/vela-aromatica-menino-sobreviveu-harry-potter" },
-    { file: "hocus-pocus.jpg",     name: "Hocus Pocus",                   note: "abóbora especiada e cinzas de vela" },
-    { file: "jardim-secreto.jpg",  name: "O Jardim Secreto",              note: "cascas e folhas",
-      url: "https://contos-luminosos.lojaintegrada.com.br/o-jardim-secreto-vela-artesanal-com-aroma-de-cascas-e-folhas-100g" },
-    { file: "jurassic-park.jpg",   name: "Jurassic Park",                 note: "folhagem tropical e terra molhada" },
-    { file: "magico-de-oz.jpg",    name: "O Mágico de Oz",                note: "algodão-doce e trilha de tijolos amarelos" },
-    { file: "moby-dick.jpg",       name: "Moby Dick",                     note: "oceano",
-      url: "https://contos-luminosos.lojaintegrada.com.br/moby-dick-vela-aromatica-artesanal-com-arma-de-oceano-100g" },
-    { file: "os-bridgertons.jpg",  name: "Os Bridgertons",                note: "pitaya",
-      url: "https://contos-luminosos.lojaintegrada.com.br/os-bridgertons-vela-aromatica-artesanal-com-aroma-de-pitaya-100g" },
-    { file: "pequeno-principe.jpg",name: "O Pequeno Príncipe",            note: "rosa, poeira de estrelas e areia do deserto" },
+  if(window.emailjs){
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
+
+  // ---------- COLEÇÕES (capa + galeria completa, por pasta) ----------
+  const colecoes = [
+    {
+      id: "gatos",
+      nome: "Gatos",
+      tagline: "Dessa cor eu não tenho!",
+      pasta: "img/colecoes/gatos",
+      capa: "capa.png",
+      capaAlt: "Vela Contos Luminosos da coleção Gatos, com gata calico entre livros",
+      imagens: [
+        { file: "01-gata-tri.png", alt: "Vela da coleção Gatos — gata calico brincando de novelo" },
+        { file: "02-gato-sia.png", alt: "Vela da coleção Gatos" },
+        { file: "03-gato-tig.png", alt: "Vela da coleção Gatos" },
+        { file: "04.png",         alt: "Vela da coleção Gatos" },
+        { file: "05.png",         alt: "Vela da coleção Gatos" },
+        { file: "06.png",         alt: "Vela da coleção Gatos" },
+        { file: "07.png",         alt: "Vela da coleção Gatos" },
+        { file: "08.png",         alt: "Vela da coleção Gatos" },
+      ],
+    },
+    {
+      id: "livros-cinema",
+      nome: "Livros, Contos e Cinema",
+      tagline: "",
+      pasta: "img/colecoes/livros-cinema",
+      capa: "capa.png",
+      capaAlt: "Velas Contos Luminosos inspiradas em livros e filmes",
+      imagens: Array.from({ length: 10 }, (_, i) => ({
+        file: `${String(i + 1).padStart(2, "0")}.jpeg`,
+        alt: "Vela da coleção Livros, Contos e Cinema",
+      })),
+    },
+    {
+      id: "velas-simples",
+      nome: "Velas Simples",
+      tagline: "",
+      pasta: "img/colecoes/velas-simples",
+      capa: "capa.jpg",
+      capaAlt: "Vela Contos Luminosos simples, com o logo da marca",
+      imagens: [
+        { file: "01.jpg", alt: "Vela simples Contos Luminosos" },
+      ],
+    },
+    {
+      id: "kit-base-madeira",
+      nome: "Kit Base de Madeira",
+      tagline: "",
+      pasta: "img/colecoes/kit-base-madeira",
+      capa: "capa.jpg",
+      capaAlt: "Kit de vela Contos Luminosos com base redonda de madeira",
+      imagens: [
+        { file: "01.jpg", alt: "Kit de vela com base redonda de madeira" },
+      ],
+    },
+    {
+      id: "kit-castical",
+      nome: "Kit Castiçal",
+      tagline: "",
+      pasta: "img/colecoes/kit-castical",
+      capa: "capa.jpg",
+      capaAlt: "Kit de vela Contos Luminosos com castiçal",
+      imagens: [
+        { file: "01.jpg", alt: "Kit de vela com castiçal" },
+      ],
+    },
   ];
 
-  const grid = document.getElementById("candle-grid");
-
-  const frag = document.createDocumentFragment();
-  candles.forEach(candle => {
-    const card = document.createElement("article");
-    card.className = "card";
+  const colecoesGrid = document.getElementById("colecoes-grid");
+  const colecoesFrag = document.createDocumentFragment();
+  colecoes.forEach(col => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "colecao-card";
+    card.dataset.id = col.id;
     card.innerHTML = `
-      <div class="card-img-wrap">
-        <img src="img/${candle.file}" alt="Vela ${candle.name}" loading="lazy">
-      </div>
-      <div class="card-body">
-        <h3>${candle.name}</h3>
-        <div class="fragrance-tag">${candle.note}</div>
-        <a class="btn-buy" href="${candle.url || STORE_URL}" target="_blank" rel="noopener">Comprar</a>
+      <img src="${col.pasta}/${col.capa}" alt="${col.capaAlt}" loading="lazy">
+      <div class="colecao-card-overlay"></div>
+      <div class="colecao-card-info">
+        <div class="colecao-card-nome">${col.nome}</div>
+        ${col.tagline ? `<div class="colecao-card-tagline">${col.tagline}</div>` : ""}
+        <div class="colecao-card-cta">Ver coleção &rarr;</div>
       </div>
     `;
-    frag.appendChild(card);
+    card.addEventListener("click", () => abrirColecao(col.id));
+    colecoesFrag.appendChild(card);
   });
-  grid.appendChild(frag);
+  colecoesGrid.appendChild(colecoesFrag);
+
+  // ---------- MODAL DA COLEÇÃO (galeria completa) ----------
+  const colecaoModal = document.getElementById("colecao-modal");
+  const colecaoModalTitle = document.getElementById("colecao-modal-title");
+  const colecaoModalTagline = document.getElementById("colecao-modal-tagline");
+  const colecaoModalGaleria = document.getElementById("colecao-modal-galeria");
+  const colecaoModalClose = document.getElementById("colecao-modal-close");
+
+  let colecaoAtual = null;
+
+  function abrirColecao(id){
+    const col = colecoes.find(c => c.id === id);
+    if(!col) return;
+    colecaoAtual = col;
+
+    colecaoModalTitle.textContent = col.nome;
+    colecaoModalTagline.textContent = col.tagline;
+    colecaoModalTagline.hidden = !col.tagline;
+    colecaoModalGaleria.innerHTML = col.imagens
+      .map((img, i) => `<img src="${col.pasta}/${img.file}" alt="${img.alt}" loading="lazy" data-index="${i}">`)
+      .join("");
+
+    colecaoModal.hidden = false;
+    document.body.classList.add("no-scroll");
+  }
+
+  function fecharColecao(){
+    colecaoModal.hidden = true;
+    document.body.classList.remove("no-scroll");
+  }
+
+  colecaoModalClose.addEventListener("click", fecharColecao);
+  colecaoModal.addEventListener("click", (e) => {
+    if(e.target === colecaoModal) fecharColecao();
+  });
+  colecaoModalGaleria.addEventListener("click", (e) => {
+    const img = e.target.closest("img");
+    if(!img) return;
+    abrirLightbox(Number(img.dataset.index));
+  });
+
+  // ---------- LIGHTBOX (foto ampliada) ----------
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const lightboxClose = document.getElementById("lightbox-close");
+  const lightboxPrev = document.getElementById("lightbox-prev");
+  const lightboxNext = document.getElementById("lightbox-next");
+
+  let lightboxIndex = 0;
+
+  function atualizarLightbox(){
+    const img = colecaoAtual.imagens[lightboxIndex];
+    lightboxImg.src = `${colecaoAtual.pasta}/${img.file}`;
+    lightboxImg.alt = img.alt;
+  }
+
+  function abrirLightbox(i){
+    lightboxIndex = i;
+    atualizarLightbox();
+    lightbox.hidden = false;
+  }
+
+  function fecharLightbox(){ lightbox.hidden = true; }
+
+  function lightboxAnterior(){
+    lightboxIndex = (lightboxIndex - 1 + colecaoAtual.imagens.length) % colecaoAtual.imagens.length;
+    atualizarLightbox();
+  }
+
+  function lightboxProxima(){
+    lightboxIndex = (lightboxIndex + 1) % colecaoAtual.imagens.length;
+    atualizarLightbox();
+  }
+
+  lightboxClose.addEventListener("click", fecharLightbox);
+  lightboxPrev.addEventListener("click", lightboxAnterior);
+  lightboxNext.addEventListener("click", lightboxProxima);
+  lightbox.addEventListener("click", (e) => {
+    if(e.target === lightbox) fecharLightbox();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if(!lightbox.hidden){
+      if(e.key === "Escape") fecharLightbox();
+      else if(e.key === "ArrowLeft") lightboxAnterior();
+      else if(e.key === "ArrowRight") lightboxProxima();
+    } else if(!colecaoModal.hidden && e.key === "Escape"){
+      fecharColecao();
+    }
+  });
 
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  // ---------- MONTE SUA VELA ----------
+  const PRECOS = {
+    "100_nenhum":  29,
+    "150_nenhum":  39,
+    "100_madeira": 35,
+    "150_madeira": 45,
+    "100_castical":45,
+    "150_castical":55,
+  };
+
+  const ACABAMENTO_LABEL = {
+    nenhum:   "sem suporte",
+    madeira:  "base redonda de madeira",
+    castical: "castiçal",
+  };
+
+  const FRAGRANCIAS = [
+    "Aroma Ideal",
+    "Pêra Inglesa",
+    "Maçã com Canela",
+    "Chocolate Belga",
+    "Lavanda Inglesa",
+    "Pitaya",
+    "Figo Negro",
+    "Bamboo",
+    "Oceano",
+    "Manga e Abacaxi",
+    "Torta de Abóbora",
+    "Morango com Champanhe",
+  ];
+
+  const monteCheiro = document.getElementById("monte-cheiro");
+  FRAGRANCIAS.forEach(nome => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "monte-option";
+    btn.dataset.group = "cheiro";
+    btn.dataset.value = nome;
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = nome;
+    monteCheiro.appendChild(btn);
+  });
+
+  const escolha = { cheiro: null, rotulo: null, tamanho: null, acabamento: null };
+  const resumoEl = document.getElementById("monte-resumo");
+  const precoEl = document.getElementById("monte-preco");
+  const addBtn = document.getElementById("monte-add");
+
+  function atualizarMonte(){
+    const completo = Boolean(escolha.cheiro && escolha.rotulo && escolha.tamanho && escolha.acabamento);
+
+    if(escolha.tamanho && escolha.acabamento){
+      const preco = PRECOS[`${escolha.tamanho}_${escolha.acabamento}`];
+      precoEl.textContent = preco.toFixed(2).replace(".", ",");
+    } else {
+      precoEl.textContent = "--";
+    }
+
+    resumoEl.textContent = completo
+      ? `Sua vela: ${escolha.cheiro} · rótulo ${escolha.rotulo.nome} · ${escolha.tamanho}g · ${ACABAMENTO_LABEL[escolha.acabamento]}`
+      : "Escolha as opções acima para ver sua vela.";
+
+    addBtn.setAttribute("aria-disabled", completo ? "false" : "true");
+  }
+
+  document.querySelectorAll(".monte-options").forEach(group => {
+    group.addEventListener("click", (e) => {
+      const btn = e.target.closest(".monte-option");
+      if(!btn) return;
+      const { group: grupo, value } = btn.dataset;
+      group.querySelectorAll(".monte-option").forEach(b => b.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      escolha[grupo] = value;
+      atualizarMonte();
+    });
+  });
+
+  // ---------- RÓTULO (estampa da vela, por coleção) ----------
+  const ROTULOS = [
+    {
+      grupo: "Gatos",
+      pasta: "img/labels/gatos",
+      itens: [
+        { file: "tricolor.jpg",              nome: "Tricolor" },
+        { file: "tigrado-cinza.jpg",         nome: "Tigrado Cinza" },
+        { file: "tigrado-amarelo.jpeg",      nome: "Tigrado Amarelo" },
+        { file: "tigrado-branco-cinza.jpeg", nome: "Tigrado Branco e Cinza" },
+        { file: "preto.jpg",                 nome: "Preto" },
+        { file: "siames.jpg",                nome: "Siamês" },
+        { file: "frajola.jpg",               nome: "Frajola" },
+        { file: "escaminha.jpg",             nome: "Escaminha" },
+        { file: "branco.jpg",                nome: "Branco" },
+        { file: "amarelo-branco.jpg",        nome: "Amarelo e Branco" },
+      ],
+    },
+    {
+      grupo: "Livros, Contos e Cinema",
+      pasta: "img/labels/livros-cinema",
+      itens: [
+        { file: "alice-no-pais-das-maravilhas.jpeg", nome: "Alice no País das Maravilhas" },
+        { file: "ases-indomaveis.jpeg",               nome: "Ases Indomáveis" },
+        { file: "cronicas-de-narnia.jpeg",            nome: "As Crônicas de Nárnia" },
+        { file: "dirty-dancing.jpeg",                 nome: "Dirty Dancing" },
+        { file: "fabrica-de-chocolate.jpeg",          nome: "A Fantástica Fábrica de Chocolate" },
+        { file: "game-of-thrones.jpeg",               nome: "Game of Thrones" },
+        { file: "guarda-costas.jpeg",                 nome: "O Guarda-Costas" },
+        { file: "harry-potter.jpeg",                  nome: "Harry Potter" },
+        { file: "hocus-pocus.jpeg",                   nome: "Hocus Pocus" },
+        { file: "jardim-secreto.jpeg",                nome: "O Jardim Secreto" },
+        { file: "jurassic-park.jpeg",                 nome: "Jurassic Park" },
+        { file: "magico-de-oz.jpeg",                  nome: "O Mágico de Oz" },
+        { file: "moby-dick.jpeg",                     nome: "Moby Dick" },
+        { file: "pequeno-principe.jpeg",               nome: "O Pequeno Príncipe" },
+        { file: "senhor-dos-aneis.jpeg",              nome: "O Senhor dos Anéis" },
+      ],
+    },
+    {
+      grupo: "Velas Simples",
+      pasta: "img/labels/velas-simples",
+      itens: [
+        { file: "logo-01.jpeg", nome: "Logo Contos Luminosos" },
+      ],
+    },
+  ];
+
+  const rotuloTabs = document.getElementById("rotulo-tabs");
+  const rotuloGrupos = document.getElementById("rotulo-grupos");
+
+  ROTULOS.forEach((grupo, i) => {
+    const tab = document.createElement("button");
+    tab.type = "button";
+    tab.className = "rotulo-tab";
+    tab.dataset.grupo = grupo.grupo;
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-selected", i === 0 ? "true" : "false");
+    tab.textContent = grupo.grupo;
+    rotuloTabs.appendChild(tab);
+
+    const painel = document.createElement("div");
+    painel.className = "rotulo-grupo";
+    painel.dataset.grupo = grupo.grupo;
+    painel.hidden = i !== 0;
+    painel.innerHTML = grupo.itens.length
+      ? `<div class="rotulo-grid">${grupo.itens.map(item => `
+          <button type="button" class="rotulo-opcao" data-grupo="${grupo.grupo}" data-file="${item.file}" data-nome="${item.nome}" aria-pressed="false">
+            <img src="${grupo.pasta}/${item.file}" alt="Rótulo ${item.nome}" loading="lazy">
+            <span>${item.nome}</span>
+          </button>`).join("")}</div>`
+      : `<div class="rotulo-empty">Rótulos dessa coleção em breve.</div>`;
+    rotuloGrupos.appendChild(painel);
+  });
+
+  rotuloTabs.addEventListener("click", (e) => {
+    const tab = e.target.closest(".rotulo-tab");
+    if(!tab) return;
+    rotuloTabs.querySelectorAll(".rotulo-tab").forEach(t => t.setAttribute("aria-selected", "false"));
+    tab.setAttribute("aria-selected", "true");
+    rotuloGrupos.querySelectorAll(".rotulo-grupo").forEach(g => {
+      g.hidden = g.dataset.grupo !== tab.dataset.grupo;
+    });
+  });
+
+  rotuloGrupos.addEventListener("click", (e) => {
+    const opcao = e.target.closest(".rotulo-opcao");
+    if(!opcao) return;
+    rotuloGrupos.querySelectorAll(".rotulo-opcao").forEach(o => o.setAttribute("aria-pressed", "false"));
+    opcao.setAttribute("aria-pressed", "true");
+    escolha.rotulo = { grupo: opcao.dataset.grupo, file: opcao.dataset.file, nome: opcao.dataset.nome };
+    atualizarMonte();
+  });
+
+  // ---------- CARRINHO ----------
+  const cartEl = document.getElementById("monte-cart");
+  const cartList = document.getElementById("cart-list");
+  const cartTotalEl = document.getElementById("cart-total");
+  const cart = [];
+
+  function renderCart(){
+    cartList.innerHTML = "";
+    cart.forEach((item, i) => {
+      const li = document.createElement("li");
+      li.className = "cart-item";
+      li.innerHTML = `
+        <span class="cart-item-desc">${item.cheiro} · ${item.rotulo.nome} · ${item.tamanho}g · ${ACABAMENTO_LABEL[item.acabamento]}</span>
+        <span class="cart-item-price">R$ ${item.preco.toFixed(2).replace(".", ",")}</span>
+        <button type="button" class="cart-remove" data-index="${i}" aria-label="Remover item">&times;</button>
+      `;
+      cartList.appendChild(li);
+    });
+    const total = cart.reduce((soma, item) => soma + item.preco, 0);
+    cartTotalEl.textContent = total.toFixed(2).replace(".", ",");
+    cartEl.hidden = cart.length === 0;
+  }
+
+  addBtn.addEventListener("click", () => {
+    if(addBtn.getAttribute("aria-disabled") === "true") return;
+
+    cart.push({
+      cheiro: escolha.cheiro,
+      rotulo: escolha.rotulo,
+      tamanho: escolha.tamanho,
+      acabamento: escolha.acabamento,
+      preco: PRECOS[`${escolha.tamanho}_${escolha.acabamento}`],
+    });
+    renderCart();
+
+    document.querySelectorAll(".monte-option").forEach(b => b.setAttribute("aria-pressed", "false"));
+    document.querySelectorAll(".rotulo-opcao").forEach(b => b.setAttribute("aria-pressed", "false"));
+    escolha.cheiro = null;
+    escolha.rotulo = null;
+    escolha.tamanho = null;
+    escolha.acabamento = null;
+    atualizarMonte();
+
+    cartEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+
+  cartList.addEventListener("click", (e) => {
+    const btn = e.target.closest(".cart-remove");
+    if(!btn) return;
+    cart.splice(Number(btn.dataset.index), 1);
+    renderCart();
+  });
+
+  // ---------- FINALIZAR COMPRA (avisa a loja por e-mail) ----------
+  function montarResumoPedido(){
+    const linhas = cart.map((item, i) =>
+      `${i + 1}. ${item.cheiro} · rótulo ${item.rotulo.nome} · ${item.tamanho}g · ${ACABAMENTO_LABEL[item.acabamento]} — R$ ${item.preco.toFixed(2).replace(".", ",")}`
+    );
+    const total = cart.reduce((soma, item) => soma + item.preco, 0);
+    return [
+      "Novo pedido — Contos Luminosos",
+      ...linhas,
+      `Total: R$ ${total.toFixed(2).replace(".", ",")}`,
+    ].join("\n");
+  }
+
+  const cartCheckout = document.getElementById("cart-checkout");
+  cartCheckout.addEventListener("click", () => {
+    if(cart.length === 0) return;
+    const resumo = montarResumoPedido();
+
+    // E-mail: enviado automaticamente via EmailJS, sem precisar de servidor.
+    if(window.emailjs){
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: EMAIL_DESTINO,
+        pedido: resumo,
+      }).catch(err => console.error("Falha ao enviar e-mail do pedido:", err));
+    }
+
+    // a navegação para a loja segue normalmente pelo href do próprio link
+  });
 </script>
 
 </body>
