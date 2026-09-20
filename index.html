@@ -621,11 +621,53 @@
     color: var(--wine);
   }
   .cart-frete{
+    border-top: 1px solid rgba(107,66,38,0.1);
+    padding-top: 18px;
+    margin-bottom: 18px;
+  }
+  .cart-frete h4{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 0.98rem;
+    color: var(--brown-dark);
+    margin-bottom: 8px;
+  }
+  .frete-status{ font-size: 0.9rem; color: var(--brown); }
+  .frete-tentar{
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--wine);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .frete-opcoes{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .frete-opcoes:not(:empty){ margin-top: 8px; }
+  .frete-opcao{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--paper);
+    border: 1px solid rgba(107,66,38,0.25);
+    border-radius: 10px;
     font-size: 0.92rem;
     color: var(--brown);
-    text-align: right;
-    margin-bottom: 10px;
+    cursor: pointer;
   }
+  .frete-opcao:has(input:checked){
+    border-color: var(--gold);
+    outline: 2px solid var(--gold-light);
+    outline-offset: 1px;
+  }
+  .frete-opcao input{ accent-color: var(--wine); }
+  .frete-texto{ flex: 1; display: flex; flex-direction: column; }
+  .frete-texto small{ font-size: 0.78rem; opacity: 0.85; }
+  .frete-preco{ font-weight: bold; color: var(--brown-dark); white-space: nowrap; }
   .cart-msg{
     background: rgba(110,31,42,0.08);
     border: 1px solid rgba(110,31,42,0.25);
@@ -911,11 +953,15 @@
       </div>
     </form>
 
-    <p class="cart-frete" id="cart-frete" hidden>Frete (taxa fixa): R$ <span id="cart-frete-valor">0,00</span></p>
+    <div class="cart-frete" id="cart-frete" hidden>
+      <h4>Frete</h4>
+      <p class="frete-status" id="frete-status" role="status">Informe o CEP para calcular o frete.</p>
+      <div class="frete-opcoes" id="frete-opcoes" role="radiogroup" aria-label="Opções de frete"></div>
+    </div>
     <p class="cart-msg" id="cart-msg" role="alert" hidden></p>
 
     <div class="cart-footer">
-      <div class="cart-total">Total: R$ <span id="cart-total">0,00</span></div>
+      <div class="cart-total"><span id="cart-total-rotulo">Total</span>: R$ <span id="cart-total">0,00</span></div>
       <a href="https://contos-luminosos.lojaintegrada.com.br/" target="_blank" rel="noopener" class="btn-primary" id="cart-checkout">Finalizar compra</a>
       <button type="button" class="btn-primary cart-pagar" id="cart-pagar" hidden>Ir para o pagamento</button>
     </div>
@@ -950,9 +996,8 @@
   // ATENÇÃO: enquanto o servidor usar o token de TESTE do Mercado Pago, nenhuma compra real é cobrada.
   // Para vender de verdade, troque o segredo MP_ACCESS_TOKEN do servidor pelo token de PRODUÇÃO.
   const PAGAMENTO_API_URL = "https://contos-luminosos-pagamento.contos-luminosos-pagamento.workers.dev";
-  // Taxa fixa de frete em R$. Precisa ser igual ao FRETE do servidor (o servidor é quem cobra;
-  // se os valores divergirem, o site avisa em vez de cobrar diferente do que foi mostrado).
-  const FRETE = 15.00;
+  // O frete não tem valor fixo: o servidor cota no Melhor Envio pelo CEP do cliente (/calcular-frete)
+  // e cobra o valor da opção escolhida. O site só mostra e confere o total.
   const PAGAMENTO_ATIVO = PAGAMENTO_API_URL !== "";
 
   // ---------- COLEÇÕES (capa + galeria completa, por pasta) ----------
@@ -1310,7 +1355,13 @@
   const cartEl = document.getElementById("monte-cart");
   const cartList = document.getElementById("cart-list");
   const cartTotalEl = document.getElementById("cart-total");
+  const cartTotalRotuloEl = document.getElementById("cart-total-rotulo");
   const cart = [];
+
+  // Frete (só com pagamento no site): opções cotadas para o CEP e a que o cliente escolheu.
+  let opcoesFrete = [];
+  let freteEscolhido = null; // { id, nome, empresa, preco, prazo }
+  let cotacaoSeq = 0;        // descarta respostas de cotações antigas
 
   function renderCart(){
     cartList.innerHTML = "";
@@ -1324,14 +1375,22 @@
       `;
       cartList.appendChild(li);
     });
-    cartTotalEl.textContent = totalDoCarrinho().toFixed(2).replace(".", ",");
+    atualizarTotal();
     cartEl.hidden = cart.length === 0;
+    // o carrinho mudou, então o frete (que depende das velas) precisa ser cotado de novo
+    if(PAGAMENTO_ATIVO) recalcularFrete();
   }
 
-  // Soma das velas (+ frete quando o pagamento no site está ligado).
+  // Soma das velas (+ frete escolhido quando o pagamento no site está ligado).
   function totalDoCarrinho(){
     const velas = cart.reduce((soma, item) => soma + item.preco, 0);
-    return PAGAMENTO_ATIVO ? velas + FRETE : velas;
+    return PAGAMENTO_ATIVO && freteEscolhido ? velas + freteEscolhido.preco : velas;
+  }
+
+  function atualizarTotal(){
+    cartTotalEl.textContent = totalDoCarrinho().toFixed(2).replace(".", ",");
+    // sem frete escolhido o valor ainda não é o total final
+    cartTotalRotuloEl.textContent = PAGAMENTO_ATIVO && !freteEscolhido ? "Subtotal (sem frete)" : "Total";
   }
 
   addBtn.addEventListener("click", () => {
@@ -1367,7 +1426,7 @@
   // ---------- FINALIZAR COMPRA (avisa a loja por e-mail) ----------
   const brl = (valor) => valor.toFixed(2).replace(".", ",");
 
-  // `extra` só existe no pagamento pelo site: { pedido, entrega }
+  // `extra` só existe no pagamento pelo site: { pedido, entrega, frete }
   function montarResumoPedido(extra){
     const linhas = cart.map((item, i) =>
       `${i + 1}. ${item.cheiro} · rótulo ${item.rotulo.nome} · ${item.tamanho}g · ${ACABAMENTO_LABEL[item.acabamento]} — R$ ${brl(item.preco)}`
@@ -1383,7 +1442,7 @@
       "Pedido iniciado (aguardando pagamento) — Contos Luminosos",
       `Nº do pedido: ${extra.pedido} (confira o pagamento no Mercado Pago)`,
       ...linhas,
-      `Frete: R$ ${brl(FRETE)}`,
+      `Frete (${extra.frete.nome}${extra.frete.prazo ? ", " + extra.frete.prazo : ""}): R$ ${brl(extra.frete.preco)}`,
       `Total: R$ ${brl(totalDoCarrinho())}`,
       "",
       "Entrega:",
@@ -1438,12 +1497,123 @@
     };
   }
 
+  // Velas do carrinho no formato que o servidor espera (preço nunca vai: o servidor usa a tabela dele).
+  const itensParaServidor = () => cart.map(item => ({
+    cheiro: item.cheiro,
+    rotulo: item.rotulo.nome,
+    tamanho: item.tamanho,
+    acabamento: item.acabamento,
+  }));
+
+  // --- frete: o servidor cota no Melhor Envio pelo CEP e o cliente escolhe a opção ---
+  const freteBloco = document.getElementById("cart-frete");
+  const freteStatus = document.getElementById("frete-status");
+  const freteOpcoesEl = document.getElementById("frete-opcoes");
+  const cepInput = cartForm.elements["cep"];
+  let cepCotado = "";
+
+  const soDigitos = (valor) => String(valor || "").replace(/\D/g, "");
+
+  function renderFrete(){
+    freteOpcoesEl.replaceChildren();
+    opcoesFrete.forEach(o => {
+      const rotulo = document.createElement("label");
+      rotulo.className = "frete-opcao";
+
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "frete";
+      radio.value = String(o.id);
+      radio.checked = !!freteEscolhido && freteEscolhido.id === o.id;
+
+      const detalhe = document.createElement("small");
+      detalhe.textContent = [o.empresa, o.prazo].filter(Boolean).join(" · ");
+      const texto = document.createElement("span");
+      texto.className = "frete-texto";
+      texto.append(o.nome, detalhe);
+
+      const preco = document.createElement("span");
+      preco.className = "frete-preco";
+      preco.textContent = `R$ ${brl(o.preco)}`;
+
+      rotulo.append(radio, texto, preco);
+      freteOpcoesEl.appendChild(rotulo);
+    });
+  }
+
+  // Cota de novo o frete do carrinho atual para o CEP digitado. Mantém a opção que o cliente
+  // já tinha escolhido se ela ainda existir; senão, deixa marcada a mais barata.
+  async function recalcularFrete(){
+    const seq = ++cotacaoSeq;
+    const anterior = freteEscolhido && freteEscolhido.id;
+    opcoesFrete = [];
+    freteEscolhido = null;
+    renderFrete();
+    atualizarTotal();
+
+    const cep = soDigitos(cepInput.value);
+    if(cart.length === 0 || cep.length === 0){
+      freteStatus.textContent = "Informe o CEP para calcular o frete.";
+      return;
+    }
+    if(cep.length !== 8){
+      freteStatus.textContent = "Digite o CEP completo (8 números).";
+      return;
+    }
+
+    freteStatus.textContent = "Calculando o frete…";
+    try {
+      const resp = await fetch(`${PAGAMENTO_API_URL}/calcular-frete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cep, itens: itensParaServidor() }),
+      });
+      const dados = await resp.json().catch(() => ({}));
+      if(seq !== cotacaoSeq) return; // já existe uma cotação mais nova
+      if(!resp.ok || !Array.isArray(dados.opcoes) || dados.opcoes.length === 0){
+        throw erroAmigavel(dados.erro || "Não foi possível calcular o frete agora.");
+      }
+      opcoesFrete = dados.opcoes;
+      freteEscolhido = opcoesFrete.find(o => o.id === anterior) || opcoesFrete[0];
+      freteStatus.textContent = "Escolha como quer receber:";
+    } catch(err){
+      if(seq !== cotacaoSeq) return;
+      console.error("Falha ao calcular o frete:", err);
+      freteStatus.textContent = (err.amigavel ? err.message : "Não foi possível calcular o frete agora.") + " ";
+      const tentar = document.createElement("button");
+      tentar.type = "button";
+      tentar.className = "frete-tentar";
+      tentar.textContent = "Tentar de novo";
+      tentar.addEventListener("click", recalcularFrete);
+      freteStatus.appendChild(tentar);
+    }
+    renderFrete();
+    atualizarTotal();
+  }
+
   if(PAGAMENTO_ATIVO){
     cartCheckout.hidden = true;
     cartPagar.hidden = false;
     cartForm.hidden = false;
-    document.getElementById("cart-frete").hidden = false;
-    document.getElementById("cart-frete-valor").textContent = brl(FRETE);
+    freteBloco.hidden = false;
+    atualizarTotal();
+
+    // cota quando o CEP muda (só refaz se os números mudaram, ex.: ignora digitar o hífen)
+    const cepMudou = () => {
+      const cep = soDigitos(cepInput.value);
+      if(cep === cepCotado) return;
+      cepCotado = cep;
+      recalcularFrete();
+    };
+    cepInput.addEventListener("input", cepMudou);
+    cepInput.addEventListener("change", cepMudou);
+
+    freteOpcoesEl.addEventListener("change", (e) => {
+      const radio = e.target.closest("input[name=frete]");
+      if(!radio) return;
+      freteEscolhido = opcoesFrete.find(o => String(o.id) === radio.value) || freteEscolhido;
+      atualizarTotal();
+    });
 
     cartPagar.addEventListener("click", async () => {
       if(cart.length === 0 || cartPagar.disabled) return;
@@ -1451,8 +1621,15 @@
         cartForm.reportValidity();
         return;
       }
+      if(!freteEscolhido){
+        mostrarMsg("Escolha uma opção de frete antes de pagar. Se ela não aparece, confira o CEP.");
+        cepInput.focus();
+        return;
+      }
 
       const rotuloBotao = cartPagar.textContent;
+      const freteUsado = freteEscolhido;
+      const totalMostrado = totalDoCarrinho();
       cartPagar.disabled = true;
       cartPagar.textContent = "Aguarde…";
       mostrarMsg("");
@@ -1463,27 +1640,27 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            itens: cart.map(item => ({
-              cheiro: item.cheiro,
-              rotulo: item.rotulo.nome,
-              tamanho: item.tamanho,
-              acabamento: item.acabamento,
-            })),
+            itens: itensParaServidor(),
             cliente: entrega,
+            frete: { servico: freteUsado.id },
           }),
         });
         const dados = await resp.json().catch(() => ({}));
         if(!resp.ok) throw erroAmigavel(dados.erro || "Não foi possível gerar o pagamento. Tente de novo.");
 
         // O servidor é quem define o valor cobrado: se divergir do que o cliente viu, não segue.
-        if(Math.abs(dados.total - totalDoCarrinho()) > 0.005){
+        if(Math.abs(dados.total - totalMostrado) > 0.005){
+          if(Math.abs(dados.frete - freteUsado.preco) > 0.005){
+            recalcularFrete();
+            throw erroAmigavel("O valor do frete mudou. Confira o novo total e clique em pagar de novo.");
+          }
           throw erroAmigavel("Os preços foram atualizados. Recarregue a página e monte o pedido de novo.");
         }
         if(new URL(dados.url).protocol !== "https:") throw new Error("URL de pagamento inválida");
 
         // avisa a loja (sem travar o cliente por mais de ~2,5s) e segue para o pagamento
         await Promise.race([
-          enviarEmailPedido(montarResumoPedido({ pedido: dados.pedido, entrega })),
+          enviarEmailPedido(montarResumoPedido({ pedido: dados.pedido, entrega, frete: freteUsado })),
           new Promise(resolve => setTimeout(resolve, 2500)),
         ]);
         window.location.href = dados.url;
