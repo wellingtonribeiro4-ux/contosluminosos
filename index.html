@@ -95,6 +95,8 @@
     transition: all .25s ease;
   }
   .nav-cta:hover{ background: transparent; color: var(--wine); }
+  .nav-cta-gold{ background: var(--gold); border-color: var(--gold); }
+  .nav-cta-gold:hover{ background: transparent; color: var(--gold); }
   .nav-links{
     display:flex;
     align-items:center;
@@ -362,16 +364,25 @@
   .lightbox{
     position: fixed; inset:0; z-index: 300;
     background: rgba(10,6,3,0.92);
-    display:flex; align-items:center; justify-content:center;
+    display:flex; flex-direction: column; align-items:center; justify-content:center;
+    gap: 14px;
     padding: 30px;
   }
   .lightbox[hidden]{ display:none; }
   .lightbox img{
     max-width: 100%;
-    max-height: 88vh;
+    max-height: 80vh;
     border-radius: 8px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
   }
+  .lightbox-caption{
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.15rem;
+    color: var(--cream);
+    text-align: center;
+    max-width: 90%;
+  }
+  .lightbox-caption:empty{ display:none; }
   .lightbox-close, .lightbox-prev, .lightbox-next{
     position: fixed;
     background: rgba(255,248,236,0.12);
@@ -815,7 +826,7 @@
   <div class="nav-inner">
     <div class="nav-brand">Contos <span>Luminosos</span></div>
     <div class="nav-links">
-      <a href="#monte-sua-vela" class="nav-link">Monte a sua</a>
+      <a href="#monte-sua-vela" class="nav-cta nav-cta-gold">Monte a sua !!</a>
       <a href="#colecao" class="nav-cta">Ver coleção</a>
     </div>
   </div>
@@ -834,8 +845,8 @@
   <div class="sobre-inner">
     <div class="kicker">Sobre a Contos Luminosos</div>
     <h2>Feitas à mão, capítulo a capítulo</h2>
-    <p>Nossas velas são artesanais, feitas à mão com todo cuidado — com temas inspirados em livros, filmes e outros temas queridos.</p>
-    <p>Você escolhe o tema que combina com você, o cheiro que mais te agrada, o tamanho e os acompanhamentos — cada vela sai do jeito que você montou.</p>
+    <p>Nossas velas são artesanais, feitas à mão com todo cuidado, com temas inspirados em livros, filmes e outros temas queridos.</p>
+    <p>Você escolhe o tema que combina com você, o cheiro que mais te agrada, o tamanho e os acompanhamentos, cada vela sai do jeito que você montou.</p>
     <p>Acenda, feche os olhos e entre no conto.</p>
   </div>
 </section>
@@ -863,6 +874,7 @@
   <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Fechar imagem">&times;</button>
   <button type="button" class="lightbox-prev" id="lightbox-prev" aria-label="Imagem anterior">&#8249;</button>
   <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
   <button type="button" class="lightbox-next" id="lightbox-next" aria-label="Próxima imagem">&#8250;</button>
 </div>
 
@@ -1010,14 +1022,14 @@
       capa: "capa.png",
       capaAlt: "Vela Contos Luminosos da coleção Gatos, com gata calico entre livros",
       imagens: [
-        { file: "01-gata-tri.png", alt: "Vela da coleção Gatos — gata calico brincando de novelo" },
-        { file: "02-gato-sia.png", alt: "Vela da coleção Gatos" },
-        { file: "03-gato-tig.png", alt: "Vela da coleção Gatos" },
-        { file: "04.png",         alt: "Vela da coleção Gatos" },
-        { file: "05.png",         alt: "Vela da coleção Gatos" },
-        { file: "06.png",         alt: "Vela da coleção Gatos" },
-        { file: "07.png",         alt: "Vela da coleção Gatos" },
-        { file: "08.png",         alt: "Vela da coleção Gatos" },
+        { file: "01-gata-tri.png", alt: "Vela da coleção Gatos — gata calico brincando de novelo", titulo: "Gato Tricolor" },
+        { file: "02-gato-sia.png", alt: "Vela da coleção Gatos", titulo: "Gato Siamês" },
+        { file: "03-gato-tig.png", alt: "Vela da coleção Gatos", titulo: "Gato Tigrado Cinza" },
+        { file: "04.png",         alt: "Vela da coleção Gatos", titulo: "Gato Frajola" },
+        { file: "05.png",         alt: "Vela da coleção Gatos", titulo: "Gato Pretinho" },
+        { file: "06.png",         alt: "Vela da coleção Gatos", titulo: "Gato Escaminha" },
+        { file: "07.png",         alt: "Vela da coleção Gatos", titulo: "Gato Branco" },
+        { file: "08.png",         alt: "Vela da coleção Gatos", titulo: "Gato Amarelo e Branco" },
       ],
     },
     {
@@ -1027,22 +1039,30 @@
       pasta: "img/colecoes/livros-cinema",
       capa: "capa.png",
       capaAlt: "Velas Contos Luminosos inspiradas em livros e filmes",
-      imagens: Array.from({ length: 10 }, (_, i) => ({
-        file: `${String(i + 1).padStart(2, "0")}.jpeg`,
-        alt: "Vela da coleção Livros, Contos e Cinema",
-      })),
+      imagens: [
+        { file: "01.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "O Pequeno Príncipe" },
+        { file: "02.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Alice no País das Maravilhas, Harry Potter e Fábrica de Chocolate" },
+        { file: "03.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Harry Potter" },
+        { file: "04.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Alice no País das Maravilhas" },
+        { file: "05.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Jurassic Park" },
+        { file: "06.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "O Mágico de Oz" },
+        { file: "07.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Moby Dick" },
+        { file: "08.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Hocus Pocus" },
+        { file: "09.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Anne de Avonlea" },
+        { file: "10.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Os Bridgertons" },
+      ],
     },
     {
       id: "velas-simples",
-      nome: "Velas Simples",
+      nome: "Velas Minimalistas",
       tagline: "",
       pasta: "img/colecoes/velas-simples",
       capa: "capa.jpg",
-      capaAlt: "Vela Contos Luminosos simples, com o logo da marca",
+      capaAlt: "Vela Contos Luminosos minimalista, com o logo da marca",
       imagens: [
-        { file: "01.jpg", alt: "Vela simples Contos Luminosos" },
-        { file: "02.jpg", alt: "Vela simples Contos Luminosos" },
-        { file: "03.jpg", alt: "Vela simples Contos Luminosos" },
+        { file: "01.jpg", alt: "Vela minimalista Contos Luminosos", titulo: "Velas minimalistas em várias cores" },
+        { file: "02.jpg", alt: "Vela minimalista Contos Luminosos", titulo: "Velas minimalistas, branca e laranja" },
+        { file: "03.jpg", alt: "Vela minimalista Contos Luminosos", titulo: "Vela minimalista em clima de leitura" },
       ],
     },
     {
@@ -1053,7 +1073,7 @@
       capa: "capa.jpg",
       capaAlt: "Kit de vela Contos Luminosos com base redonda de madeira",
       imagens: [
-        { file: "01.jpg", alt: "Kit de vela com base redonda de madeira" },
+        { file: "01.jpg", alt: "Kit de vela com base redonda de madeira", titulo: "Kit com base redonda de madeira" },
       ],
     },
     {
@@ -1064,7 +1084,7 @@
       capa: "capa.jpg",
       capaAlt: "Kit de vela Contos Luminosos com castiçal",
       imagens: [
-        { file: "01.jpg", alt: "Kit de vela com castiçal" },
+        { file: "01.jpg", alt: "Kit de vela com castiçal", titulo: "Kit com castiçal de vidro" },
       ],
     },
   ];
@@ -1133,6 +1153,7 @@
   // ---------- LIGHTBOX (foto ampliada) ----------
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
+  const lightboxCaption = document.getElementById("lightbox-caption");
   const lightboxClose = document.getElementById("lightbox-close");
   const lightboxPrev = document.getElementById("lightbox-prev");
   const lightboxNext = document.getElementById("lightbox-next");
@@ -1143,6 +1164,7 @@
     const img = colecaoAtual.imagens[lightboxIndex];
     lightboxImg.src = `${colecaoAtual.pasta}/${img.file}`;
     lightboxImg.alt = img.alt;
+    lightboxCaption.textContent = img.titulo || "";
   }
 
   function abrirLightbox(i){
@@ -1199,18 +1221,28 @@
   };
 
   const FRAGRANCIAS = [
-    "Aroma Ideal",
-    "Pêra Inglesa",
-    "Maçã com Canela",
-    "Chocolate Belga",
-    "Lavanda Inglesa",
-    "Pitaya",
-    "Figo Negro",
-    "Bamboo",
-    "Oceano",
-    "Manga e Abacaxi",
-    "Torta de Abóbora",
+    "Cascas e Folhas",
+    "Manga com Abacaxi",
+    "Flor de Cerejeira",
+    "Gardênia",
     "Morango com Champanhe",
+    "Chocolate Belga",
+    "Cravo e Canela",
+    "Maçã e Canela",
+    "Figo Negro",
+    "Pitaya",
+    "Torta de Abóbora",
+    "Oceano",
+    "Chá Branco",
+    "Lavanda",
+    "Pêra Inglesa",
+    "Café Torrado",
+    "Bamboo",
+    "Baunilha",
+    "Loungerie (inspirado)",
+    "Cloé (inspirado)",
+    "Acqua di Gio (inspirado)",
+    "Scandal (inspirado)",
   ];
 
   const monteCheiro = document.getElementById("monte-cheiro");
@@ -1296,10 +1328,14 @@
         { file: "moby-dick.jpeg",                     nome: "Moby Dick" },
         { file: "pequeno-principe.jpeg",               nome: "O Pequeno Príncipe" },
         { file: "senhor-dos-aneis.jpeg",              nome: "O Senhor dos Anéis" },
+        { file: "pequena-sereia.jpeg",                nome: "A Pequena Sereia" },
+        { file: "bridgertons.jpeg",                   nome: "Bridgertons" },
+        { file: "titanic.jpeg",                       nome: "Titanic" },
+        { file: "uma-linda-mulher.jpeg",              nome: "Uma Linda Mulher" },
       ],
     },
     {
-      grupo: "Velas Simples",
+      grupo: "Velas Minimalistas",
       pasta: "img/labels/velas-simples",
       itens: [
         { file: "logo-01.jpeg", nome: "Logo Contos Luminosos" },
