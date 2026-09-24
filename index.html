@@ -348,17 +348,25 @@
     columns: 3 220px;
     column-gap: 16px;
   }
-  .galeria img{
+  .galeria-item{
+    break-inside: avoid;
+    margin-bottom: 16px;
+    cursor: zoom-in;
+  }
+  .galeria-item img{
     width:100%;
     display:block;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    margin-bottom: 16px;
-    break-inside: avoid;
-    cursor: zoom-in;
     transition: transform .3s ease;
   }
-  .galeria img:hover{ transform: scale(1.02); }
+  .galeria-item:hover img{ transform: scale(1.02); }
+  .galeria-item-titulo{
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--brown);
+    text-align: center;
+  }
 
   /* ---------- LIGHTBOX (nivel 3: foto ampliada) ---------- */
   .lightbox{
@@ -805,7 +813,8 @@
     .colecoes-grid{ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
     .rotulo-grid{ grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
     .galeria{ columns: 2 140px; column-gap: 10px; }
-    .galeria img{ margin-bottom: 10px; border-radius: 12px; }
+    .galeria-item{ margin-bottom: 10px; }
+    .galeria-item img{ border-radius: 12px; }
     .colecao-modal{ padding: 24px 10px; }
     .colecao-modal-panel{ padding: 26px 16px 30px; }
     .nav-links{ gap: 12px; }
@@ -1041,7 +1050,6 @@
       capaAlt: "Velas Contos Luminosos inspiradas em livros e filmes",
       imagens: [
         { file: "01.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "O Pequeno Príncipe" },
-        { file: "02.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Alice no País das Maravilhas, Harry Potter e Fábrica de Chocolate" },
         { file: "03.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Harry Potter" },
         { file: "04.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Alice no País das Maravilhas" },
         { file: "05.jpeg", alt: "Vela da coleção Livros, Contos e Cinema", titulo: "Jurassic Park" },
@@ -1128,7 +1136,7 @@
     colecaoModalTagline.textContent = col.tagline;
     colecaoModalTagline.hidden = !col.tagline;
     colecaoModalGaleria.innerHTML = col.imagens
-      .map((img, i) => `<img src="${col.pasta}/${img.file}" alt="${img.alt}" loading="lazy" data-index="${i}">`)
+      .map((img, i) => `<div class="galeria-item"><img src="${col.pasta}/${img.file}" alt="${img.alt}" loading="lazy" data-index="${i}">${img.titulo ? `<div class="galeria-item-titulo">${img.titulo}</div>` : ""}</div>`)
       .join("");
 
     colecaoModal.hidden = false;
@@ -1145,8 +1153,9 @@
     if(e.target === colecaoModal) fecharColecao();
   });
   colecaoModalGaleria.addEventListener("click", (e) => {
-    const img = e.target.closest("img");
-    if(!img) return;
+    const item = e.target.closest(".galeria-item");
+    if(!item) return;
+    const img = item.querySelector("img");
     abrirLightbox(Number(img.dataset.index));
   });
 
