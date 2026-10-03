@@ -487,6 +487,18 @@
     transition: all .2s ease;
   }
   .monte-option:hover{ border-color: var(--wine); color: var(--wine); }
+  .monte-option-cheiro{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .cheiro-icone{
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--gold);
+  }
+  .monte-option-cheiro[aria-pressed="true"] .cheiro-icone{ color: var(--gold-light); }
   .monte-option[aria-pressed="true"]{
     background: var(--wine);
     border-color: var(--wine);
@@ -997,6 +1009,8 @@
   }
 
   @media (max-width: 480px){
+    .nav-inner{ flex-wrap: wrap; justify-content: center; gap: 8px 12px; padding: 10px 12px; }
+    .nav-cta{ white-space: nowrap; }
     .hero{ padding: 70px 20px 54px; }
     .sobre, .colecao, .monte{ padding-left: 18px; padding-right: 18px; }
     .colecoes-grid{ grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -1203,11 +1217,11 @@
     </details>
     <details class="faq-item">
       <summary>Quais formas de pagamento vocês aceitam?</summary>
-      <p>O pagamento é processado pelo Mercado Pago, com cartão, Pix e boleto. Depois de montar seu pedido e preencher os dados de entrega, você escolhe a forma de pagamento diretamente na página segura do Mercado Pago.</p>
+      <p>O pagamento é feito pelo Mercado Pago. Depois de montar seu pedido e preencher os dados de entrega, você é levado para a página segura do Mercado Pago, onde aparecem as formas de pagamento disponíveis.</p>
     </details>
     <details class="faq-item">
       <summary>Quanto tempo dura a queima da vela?</summary>
-      <p>Em média, uma vela de 100g dura cerca de 20 a 25 horas de queima e uma de 150g cerca de 30 a 35 horas, dependendo de como ela é usada. Para aproveitar melhor: na primeira queima, deixe a vela acesa até a cera derreter por igual até as bordas — isso evita que ela "afunile" nas próximas vezes.</p>
+      <p>O tempo de queima depende do tamanho da vela (a de 150g dura mais que a de 100g) e de como ela é usada. Para aproveitar melhor: na primeira queima, deixe a vela acesa até a cera derreter por igual até as bordas — isso evita que ela "afunile" nas próximas vezes.</p>
     </details>
     <details class="faq-item">
       <summary>Como cuidar da minha vela?</summary>
@@ -1487,6 +1501,29 @@
     "Scandal (inspirado)",
   ];
 
+  // Ícone de cada aroma, por família olfativa.
+  const ICONES_CHEIRO = {
+    fruta:   '<path d="M12 7c-3-2-7 0-7 5s3 9 7 9 7-4 7-9-4-7-7-5z"/><path d="M12 7c0-2 1-4 3-4"/>',
+    flor:    '<circle cx="12" cy="7" r="3"/><circle cx="17" cy="12" r="3"/><circle cx="12" cy="17" r="3"/><circle cx="7" cy="12" r="3"/><circle cx="12" cy="12" r="1.5"/>',
+    doce:    '<path d="M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2 2 0 0 1 0 4H17"/><path d="M9 3c-1 1.5 1 2.5 0 4M13 3c-1 1.5 1 2.5 0 4"/>',
+    folha:   '<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M5 19l9-9"/>',
+    agua:    '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+    perfume: '<path d="M9 3h6"/><path d="M10 3v4.2c0 .5-.15.99-.44 1.4L7.1 12.1A4 4 0 0 0 6 14.7V19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4.3a4 4 0 0 0-1.1-2.6l-2.46-3.5A2.4 2.4 0 0 1 14 7.2V3"/>',
+  };
+  const FAMILIA_CHEIRO = {
+    "Manga com Abacaxi": "fruta", "Morango com Champanhe": "fruta", "Figo Negro": "fruta",
+    "Pitaya": "fruta", "Pêra Inglesa": "fruta",
+    "Flor de Cerejeira": "flor", "Gardênia": "flor", "Lavanda": "flor",
+    "Chocolate Belga": "doce", "Cravo e Canela": "doce", "Maçã e Canela": "doce",
+    "Torta de Abóbora": "doce", "Café Torrado": "doce", "Baunilha": "doce",
+    "Cascas e Folhas": "folha", "Bamboo": "folha", "Chá Branco": "folha",
+    "Oceano": "agua",
+  };
+  const iconeCheiro = (nome) => {
+    const familia = FAMILIA_CHEIRO[nome] || (nome.includes("(inspirado)") ? "perfume" : "flor");
+    return `<svg class="cheiro-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONES_CHEIRO[familia]}</svg>`;
+  };
+
   const monteCheiro = document.getElementById("monte-cheiro");
   FRAGRANCIAS.forEach(nome => {
     const btn = document.createElement("button");
@@ -1495,7 +1532,9 @@
     btn.dataset.group = "cheiro";
     btn.dataset.value = nome;
     btn.setAttribute("aria-pressed", "false");
-    btn.textContent = nome;
+    btn.classList.add("monte-option-cheiro");
+    btn.innerHTML = iconeCheiro(nome);
+    btn.append(nome);
     monteCheiro.appendChild(btn);
   });
 
